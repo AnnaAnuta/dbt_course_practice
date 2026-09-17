@@ -1,0 +1,59 @@
+version: 2
+
+sources:
+  - name: demo_src
+    schema: demo_src
+
+    tables:
+      - name: boarding_passes
+        description: "Посадочные талоны пассажиров на рейсы."
+        columns:
+          - name: ticket_no
+            description: "Номер билета пассажира."
+          - name: flight_id
+            description: "Идентификатор рейса."
+          - name: seat_no
+            description: "Номер места пассажира в самолёте."
+
+      - name: flights
+        description: "Рейсы с информацией о маршруте, расписании и фактическом времени выполнения."
+
+        loaded_at_field: actual_departure
+
+        freshness:
+          warn_after:
+            count: 24
+            period: hour
+          error_after:
+            count: 48
+            period: hour
+
+        columns:
+          - name: flight_id
+            description: "Уникальный идентификатор рейса."
+          - name: flight_no
+            description: "Номер рейса."
+          - name: actual_departure
+            description: "Фактическое время вылета."
+
+      - name: ticket_flights
+        description: "Перелёты, включённые в билеты пассажиров."
+        columns:
+          - name: ticket_no
+            description: "Номер билета."
+          - name: flight_id
+            description: "Идентификатор рейса."
+          - name: fare_conditions
+            description: "Класс обслуживания."
+
+      - name: tickets
+        description: "Билеты пассажиров, относящиеся к бронированиям."
+        columns:
+          - name: ticket_no
+            description: "Уникальный номер билета."
+          - name: book_ref
+            description: "Номер бронирования."
+          - name: passenger_id
+            description: "Идентификатор пассажира."
+          - name: passenger_name
+            description: "Имя пассажира."
